@@ -27,11 +27,17 @@
     }
     #logo {
       width: 120px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+    }
+    #progress {
+      font-size: 14px;
+      color: #0033A0;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
     #question {
       font-size: 18px;
-      margin: 20px 0;
+      margin: 15px 0;
       font-weight: 600;
       color: #0033A0;
       line-height: 1.4;
@@ -53,12 +59,11 @@
       background: #e0e8ff;
       border-color: #007BFF;
     }
-    .option.selected { background: #d0e0ff; }
     #timer {
       font-size: 18px;
       color: #d32f2f;
       font-weight: bold;
-      margin: 15px 0;
+      margin: 10px 0;
     }
     #result {
       margin-top: 20px;
@@ -91,6 +96,7 @@
 <body>
   <div id="quiz-container">
     <img id="logo" src="https://www.msb.com.vn/assets/images/logo.svg" alt="MSB Logo">
+    <div id="progress">Câu 1 / 81</div>
     <div id="question"></div>
     <div id="timer">Thời gian: 30s</div>
     <div id="options"></div>
@@ -190,12 +196,17 @@
     let timer;
     let timeLeft = 30;
 
+    function updateProgress() {
+      document.getElementById("progress").textContent = `Câu ${currentQuestion + 1} / ${questions.length}`;
+    }
+
     function loadQuestion() {
       if (currentQuestion >= questions.length) {
         showResult();
         return;
       }
 
+      updateProgress();
       const q = questions[currentQuestion];
       document.getElementById("question").textContent = q.question;
       const optionsDiv = document.getElementById("options");
@@ -247,11 +258,12 @@
     }
 
     function showResult() {
-      const percent = Math.round((score / questions.length) * 100);
+      const total = questions.length;
+      const percent = Math.round((score / total) * 100);
       document.getElementById("quiz-container").innerHTML = `
         <img id="logo" src="https://www.msb.com.vn/assets/images/logo.svg" alt="MSB Logo" style="width:120px; margin-bottom:20px;">
         <h2 style="color:#0033A0;">Kết quả bài làm</h2>
-        <p>Bạn trả lời đúng <strong>${score}</strong> / ${questions.length} câu</p>
+        <p>Bạn trả lời đúng <strong>${score}</strong> / ${total} câu</p>
         <p>Tỷ lệ: <strong>${percent}%</strong></p>
         <button onclick="location.reload()" style="margin-top:20px;padding:12px 24px;background:#0033A0;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold;">
           Làm lại bài quiz
@@ -260,6 +272,7 @@
       `;
     }
 
+    // Bắt đầu
     loadQuestion();
   </script>
 </body>
